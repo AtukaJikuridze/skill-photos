@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import Search from "../../components/home/Search";
 
 const Home: React.FC = () => {
-  return <div className="text-red-400">Home</div>;
+  const [debounceValue, setDebouncedValue] = useState<string>("");
+  console.log(debounceValue);
+
+  return (
+    <main>
+      <Search setDebouncedValue={setDebouncedValue} />
+    </main>
+  );
 };
 
 export default Home;
