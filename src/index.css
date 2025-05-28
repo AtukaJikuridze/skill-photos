@@ -32,7 +32,9 @@
   font-family: mainBold;
   src: url("/fonts/OnService-Bold.woff2");
 }
-
+.container {
+  margin: 0px auto;
+}
 @media (min-width: 768px) {
   .container {
     width: 750px;

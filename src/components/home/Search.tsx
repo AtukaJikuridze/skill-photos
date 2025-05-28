@@ -25,7 +25,7 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue }) => {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="text-paragraph text-sm outline-none border-0 w-full"
+            className="text-black placeholder:text-paragraph text-sm outline-none border-0 w-full"
             placeholder="მოძებნე ფოტო"
           />
         </div>
