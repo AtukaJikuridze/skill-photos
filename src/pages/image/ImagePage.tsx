@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import ImageLoader from "../../components/loaders/ImageLoader";
+import { useEffect } from "react";
 
 interface UnsplashTag {
   title: string;
@@ -28,7 +29,6 @@ const fetchRelatedPhotos = async (tags: UnsplashTag[], userId: string) => {
     throw new Error("Unsplash access key is missing");
   }
 
-  // First try to get photos with similar tags
   const tagQuery = tags
     .slice(0, 2)
     .map((tag) => tag.title)
@@ -44,7 +44,6 @@ const fetchRelatedPhotos = async (tags: UnsplashTag[], userId: string) => {
     }
   }
 
-  // Fallback to user's other photos if no tags or tag search failed
   const url = `https://api.unsplash.com/users/${userId}/photos?per_page=6&client_id=${ACCESS_KEY}`;
   const res = await fetch(url);
 
@@ -58,6 +57,11 @@ const fetchRelatedPhotos = async (tags: UnsplashTag[], userId: string) => {
 const ImagePage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [id]);
+
   const {
     data: photo,
     isLoading,
@@ -162,7 +166,6 @@ const ImagePage = () => {
         )}
       </div>
 
-      {/* Suggested Photos Section */}
       <div className="mt-8">
         <h2 className="text-2xl font-mainBold mb-4">მსგავსი ფოტოები</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

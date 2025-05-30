@@ -26,7 +26,6 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue, initialValue }) => {
     return () => clearTimeout(timer);
   }, [inputValue, setDebouncedValue]);
 
-  // Update input value when initialValue changes
   useEffect(() => {
     setInputValue(initialValue);
   }, [initialValue]);
@@ -48,7 +47,7 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue, initialValue }) => {
           <button
             onClick={openFilterModal}
             type="button"
-            className="bg-main-blue px-10 h-full text-white rounded-md text-sm font-mainRegular cursor-pointer leading-normal"
+            className="bg-main-blue px-4 h-full text-white rounded-md text-sm font-mainRegular cursor-pointer leading-normal sm:px-10"
           >
             გაფილტვრა
           </button>

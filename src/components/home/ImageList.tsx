@@ -1,5 +1,3 @@
-// components/ImageList.tsx
-
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchImages } from "../../api/unsplash";
 import { useEffect } from "react";
@@ -52,7 +50,7 @@ const ImageList = ({ query }: { query: string }) => {
     <>
       <div className="columns-1 sm:columns-2 md:columns-4 gap-4 p-4">
         {isLoading ? (
-          // Show 12 skeleton loaders in a grid
+  
           <>
             {[...Array(12)].map((_, i) => (
               <div key={i} className="mb-4">

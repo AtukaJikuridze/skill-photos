@@ -26,7 +26,6 @@ const Navbar: React.FC = () => {
           alt="right background"
           className="h-[200px] object-cover"
         />
-        {/* Right transparent gradient overlay */}
       </div>
     </nav>
   );

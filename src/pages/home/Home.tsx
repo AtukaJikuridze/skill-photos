@@ -9,7 +9,6 @@ const Home: React.FC = () => {
     searchParams.get("q") || ""
   );
 
-  // Update URL when search changes
   useEffect(() => {
     if (debouncedValue) {
       setSearchParams({ q: debouncedValue });
