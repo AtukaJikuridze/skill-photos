@@ -4,8 +4,12 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchImages } from "../../api/unsplash";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import ImageLoader from "../loaders/ImageLoader";
+import { useFilterStore } from "../../store/filterStore";
 
 const ImageList = ({ query }: { query: string }) => {
+  const filters = useFilterStore((state) => state.filters);
+
   const {
     data,
     isLoading,
@@ -14,8 +18,8 @@ const ImageList = ({ query }: { query: string }) => {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["images", query],
-    queryFn: ({ pageParam = 1 }) => fetchImages(query, pageParam),
+    queryKey: ["images", query, filters],
+    queryFn: ({ pageParam = 1 }) => fetchImages(query, pageParam, filters),
     getNextPageParam: (lastPage, allPages) => {
       if (allPages.length < lastPage.totalPages) {
         return allPages.length + 1;
@@ -42,31 +46,45 @@ const ImageList = ({ query }: { query: string }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading images</p>;
 
   return (
     <>
       <div className="columns-1 sm:columns-2 md:columns-4 gap-4 p-4">
-        {data?.pages.map((page) =>
-          page.images.map((img: any) => (
-            <Link
-              to={`/image/${img.id}`}
-              key={img.id}
-              className="block mb-4 cursor-pointer hover:opacity-90 transition-opacity"
-            >
-              <img
-                src={img.urls.small}
-                alt={img.alt_description}
-                className="w-full rounded-lg"
-                loading="lazy"
-              />
-            </Link>
-          ))
+        {isLoading ? (
+          // Show 12 skeleton loaders in a grid
+          <>
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="mb-4">
+                <ImageLoader type="suggestion" />
+              </div>
+            ))}
+          </>
+        ) : (
+          data?.pages.map((page) =>
+            page.images.map((img: any) => (
+              <Link
+                to={`/image/${img.id}`}
+                key={img.id}
+                className="block mb-4 cursor-pointer hover:opacity-90 transition-opacity"
+              >
+                <img
+                  src={img.urls.small}
+                  alt={img.alt_description}
+                  className="w-full rounded-lg"
+                  loading="lazy"
+                />
+              </Link>
+            ))
+          )
         )}
       </div>
       {isFetchingNextPage && (
-        <div className="text-center py-4">Loading more...</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
+          {[...Array(4)].map((_, i) => (
+            <ImageLoader key={i} type="suggestion" />
+          ))}
+        </div>
       )}
     </>
   );
