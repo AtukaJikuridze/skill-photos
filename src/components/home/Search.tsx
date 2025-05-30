@@ -3,10 +3,11 @@ import { IoIosSearch } from "react-icons/io";
 
 interface SearchProps {
   setDebouncedValue: (value: string) => void;
+  initialValue: string;
 }
 
-const Search: React.FC<SearchProps> = ({ setDebouncedValue }) => {
-  const [inputValue, setInputValue] = useState("");
+const Search: React.FC<SearchProps> = ({ setDebouncedValue, initialValue }) => {
+  const [inputValue, setInputValue] = useState(initialValue);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -15,6 +16,11 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue }) => {
 
     return () => clearTimeout(timer);
   }, [inputValue, setDebouncedValue]);
+
+  // Update input value when initialValue changes
+  useEffect(() => {
+    setInputValue(initialValue);
+  }, [initialValue]);
 
   return (
     <div className="flex justify-center items-center">
