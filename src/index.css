@@ -15,6 +15,12 @@
   --font-mainSemiBold: "mainSemiBold";
   --font-mainBold: "mainBold";
 }
+@layer base {
+  body {
+    box-sizing: border-box;
+    font-family: mainBold;
+  }
+}
 
 @font-face {
   font-family: mainRegular;
@@ -38,7 +44,6 @@
 @media (min-width: 768px) {
   .container {
     width: 750px;
-    
   }
 }
 @media (min-width: 992px) {

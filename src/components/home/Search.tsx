@@ -53,7 +53,7 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue, initialValue }) => {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              className="text-black placeholder:text-paragraph text-sm outline-none border-0 w-full"
+              className="text-black placeholder:text-paragraph text-sm outline-none font-mainMediumborder-0 w-full"
               placeholder="მოძებნე ფოტო"
             />
           </div>
@@ -72,7 +72,7 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue, initialValue }) => {
               <button
                 key={tag}
                 onClick={() => handleTagClick(tag)}
-                className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-1 transition-colors"
+                className="font-mainMedium cursor-pointer bg-gray-100 hover:bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-1 transition-colors"
               >
                 <span>{tag}</span>
                 <IoClose

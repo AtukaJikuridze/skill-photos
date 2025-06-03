@@ -39,7 +39,7 @@ const Home: React.FC = () => {
                 <button
                   key={suggestion}
                   onClick={() => setDebouncedValue(suggestion)}
-                  className="bg-gray-100 hover:bg-gray-200 rounded-lg p-4 transition-colors font-mainRegular cursor-pointer"
+                  className="bg-gray-100 hover:bg-gray-200 rounded-lg p-4 transition-colors font-mainMedium cursor-pointer"
                 >
                   {suggestion}
                 </button>
