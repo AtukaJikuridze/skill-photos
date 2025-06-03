@@ -18,7 +18,7 @@
 @layer base {
   body {
     box-sizing: border-box;
-    font-family: mainBold;
+    font-family: var(--font-mainRegular);
   }
 }
 

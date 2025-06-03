@@ -14,7 +14,7 @@ export const fetchImages = async (
   const params = new URLSearchParams({
     query: query,
     page: page.toString(),
-    per_page: "12",
+    per_page: "20",
     client_id: ACCESS_KEY,
     ...(filters.orderBy && { order_by: filters.orderBy }),
     ...(filters.orientation && { orientation: filters.orientation }),
