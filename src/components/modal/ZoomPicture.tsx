@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { IZoomPicture } from "../../types/zoom-picture";
+import { IoClose } from "react-icons/io5";
 const ZoomPicture: React.FC<IZoomPicture> = ({
   isZoomed,
   setIsZoomed,
   photo,
 }: IZoomPicture) => {
+  useEffect(() => {
+    if (isZoomed) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [isZoomed]);
+
   return (
     <>
       {isZoomed && photo && (
@@ -24,7 +33,7 @@ const ZoomPicture: React.FC<IZoomPicture> = ({
               setIsZoomed(false);
             }}
           >
-            ✕
+            <IoClose size={54} />
           </button>
         </div>
       )}

@@ -61,7 +61,6 @@ const FilterModal: React.FC<FilterModalProps> = ({
           </button>
         </div>
 
-        {/* Orientation Filter */}
         <div className="mb-6">
           <h3 className="font-mainBold mb-3">ორიენტაცია</h3>
           <div className="flex gap-3">
