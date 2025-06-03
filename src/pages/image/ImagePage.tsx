@@ -2,59 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import ImageLoader from "../../components/loaders/ImageLoader";
 import { useEffect } from "react";
-
-interface UnsplashTag {
-  title: string;
-}
-
-const fetchPhotoDetails = async (id: string) => {
-  const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
-  if (!ACCESS_KEY) {
-    throw new Error("Unsplash access key is missing");
-  }
-
-  const url = `https://api.unsplash.com/photos/${id}?client_id=${ACCESS_KEY}`;
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch photo details: ${res.status}`);
-  }
-
-  return res.json();
-};
-
-const fetchRelatedPhotos = async (tags: UnsplashTag[], userId: string) => {
-  const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
-  if (!ACCESS_KEY) {
-    throw new Error("Unsplash access key is missing");
-  }
-
-  const tagQuery = tags
-    .slice(0, 2)
-    .map((tag) => tag.title)
-    .join(" OR ");
-  if (tagQuery) {
-    const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
-      tagQuery
-    )}&per_page=6&client_id=${ACCESS_KEY}`;
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
-      return data.results;
-    }
-  }
-
-  const url = `https://api.unsplash.com/users/${userId}/photos?per_page=6&client_id=${ACCESS_KEY}`;
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch related photos: ${res.status}`);
-  }
-
-  return res.json();
-};
+import { fetchImage, fetchRelatedPhotos } from "../../api/unsplash";
 
 const ImagePage = () => {
+  const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
@@ -68,13 +19,13 @@ const ImagePage = () => {
     isError,
   } = useQuery({
     queryKey: ["photo", id],
-    queryFn: () => fetchPhotoDetails(id!),
+    queryFn: () => fetchImage(id!, ACCESS_KEY),
     enabled: !!id,
   });
 
   const { data: relatedPhotos, isLoading: isLoadingRelated } = useQuery({
     queryKey: ["related", id],
-    queryFn: () => fetchRelatedPhotos(photo?.tags || [], photo?.user?.username),
+    queryFn: () => fetchRelatedPhotos(photo?.tags || []),
     enabled: !!photo,
   });
 
@@ -154,7 +105,8 @@ const ImagePage = () => {
                   {photo.tags?.map((tag: any) => (
                     <span
                       key={tag.title}
-                      className="bg-gray-100 px-3 py-1 rounded-full text-sm"
+                      className="bg-gray-100 px-3 py-1 rounded-full text-sm capitalize cursor-pointer"
+                      onClick={() => navigate(`/?q=${tag.title}`)}
                     >
                       {tag.title}
                     </span>

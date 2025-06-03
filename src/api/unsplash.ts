@@ -1,3 +1,4 @@
+import type { UnsplashTag } from "../types/fetch";
 import type { PhotoFilters } from "../types/filters";
 
 export const fetchImages = async (
@@ -36,4 +37,50 @@ export const fetchImages = async (
     total: data.total,
     totalPages: data.total_pages,
   };
+};
+
+// utils/fetchImage.ts
+export const fetchImage = async (id: string, ACCESS_KEY: string) => {
+  try {
+    const response = await fetch(
+      `https://api.unsplash.com/photos/${id}?client_id=${ACCESS_KEY}`
+    );
+    if (!response.ok) {
+      throw new Error("Image fetch failed");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    return null;
+  }
+};
+
+export const fetchRelatedPhotos = async (tags: UnsplashTag[]) => {
+  const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
+  if (!ACCESS_KEY) {
+    throw new Error("Unsplash access key is missing");
+  }
+
+  const tagQuery = tags
+    .slice(0, 2)
+    .map((tag) => tag.title)
+    .join(" OR ");
+
+  if (!tagQuery) return [];
+
+  const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
+    tagQuery
+  )}&per_page=6&client_id=${ACCESS_KEY}`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(
+      `Failed to fetch related photos: ${res.status} - ${errText}`
+    );
+  }
+
+  const data = await res.json();
+  return data.results;
 };
