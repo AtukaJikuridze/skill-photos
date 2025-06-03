@@ -1,14 +1,19 @@
 import React from "react";
-import type { PhotoFilters, Orientation, OrderBy } from "../../types/filters";
-import { colorOptions } from "../../types/filters";
+import type {
+  PhotoFilters,
+  Orientation,
+  OrderBy,
+  IOrderByOptions,
+  FilterModalProps,
+  Color,
+} from "../../types/filter-types";
 import { IoClose } from "react-icons/io5";
+import { colorOptions, orientationOptions } from "../../api/filter";
 
-interface FilterModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  filters: PhotoFilters;
-  onApplyFilters: (filters: PhotoFilters) => void;
-}
+const orderByOptions: IOrderByOptions[] = [
+  { label: "რელევანტური", value: "relevant" },
+  { label: "უახლესი", value: "latest" },
+];
 
 const FilterModal: React.FC<FilterModalProps> = ({
   isOpen,
@@ -56,74 +61,72 @@ const FilterModal: React.FC<FilterModalProps> = ({
           </button>
         </div>
 
+        {/* Orientation Filter */}
         <div className="mb-6">
           <h3 className="font-mainBold mb-3">ორიენტაცია</h3>
           <div className="flex gap-3">
-            {(["landscape", "portrait", "squarish"] as Orientation[]).map(
-              (orientation) => (
-                <button
-                  key={orientation}
-                  onClick={() => handleOrientationChange(orientation)}
-                  className={`px-4 py-2 rounded-lg ${
-                    localFilters.orientation === orientation
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-100 hover:bg-gray-200"
-                  }`}
-                >
-                  {orientation === "landscape"
-                    ? "ჰორიზონტალური"
-                    : orientation === "portrait"
-                    ? "ვერტიკალური"
-                    : "კვადრატული"}
-                </button>
-              )
-            )}
+            {orientationOptions.map((orientation: Orientation) => (
+              <button
+                key={orientation}
+                onClick={() => handleOrientationChange(orientation)}
+                className={`px-4 py-2 rounded-lg ${
+                  localFilters.orientation === orientation
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 hover:bg-gray-200"
+                }`}
+              >
+                {orientation === "landscape"
+                  ? "ჰორიზონტალური"
+                  : orientation === "portrait"
+                  ? "ვერტიკალური"
+                  : "კვადრატული"}
+              </button>
+            ))}
           </div>
         </div>
 
         <div className="mb-6">
           <h3 className="font-mainBold mb-3">დალაგება</h3>
           <div className="flex gap-3">
-            <button
-              onClick={() => handleOrderChange("relevant")}
-              className={`px-4 py-2 rounded-lg ${
-                localFilters.orderBy === "relevant"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 hover:bg-gray-200"
-              }`}
-            >
-              რელევანტური
-            </button>
-            <button
-              onClick={() => handleOrderChange("latest")}
-              className={`px-4 py-2 rounded-lg ${
-                localFilters.orderBy === "latest"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 hover:bg-gray-200"
-              }`}
-            >
-              უახლესი
-            </button>
+            {orderByOptions.map(({ label, value }: IOrderByOptions) => (
+              <button
+                key={value}
+                onClick={() => handleOrderChange(value)}
+                className={`px-4 py-2 rounded-lg ${
+                  localFilters.orderBy === value
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 hover:bg-gray-200"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
         <div className="mb-6">
-          <h3 className="font-mainBold mb-3">ფერი</h3>
+          <h3 className="font-mainBold mb-3">მსგავსი ფერი</h3>
           <div className="grid grid-cols-4 gap-3">
-            {colorOptions.map((color) => (
-              <button
-                key={color.value}
-                onClick={() => handleColorChange(color.value)}
-                className={`cursor-pointer group relative h-12 rounded-lg overflow-hidden  ${
-                  color.bg
-                } ${
-                  localFilters.color === color.value
-                    ? "ring-2 ring-blue-500"
-                    : ""
-                }`}
-                title={color.label}
-              ></button>
-            ))}
+            {colorOptions.map(
+              ({
+                value,
+                label,
+                bg,
+              }: {
+                value: Color;
+                label: string;
+                bg: string;
+              }) => (
+                <button
+                  key={value}
+                  onClick={() => handleColorChange(value)}
+                  className={`cursor-pointer group relative h-12 rounded-lg overflow-hidden  ${bg} ${
+                    localFilters.color === value ? "ring-2 ring-blue-500" : ""
+                  }`}
+                  title={label}
+                ></button>
+              )
+            )}
           </div>
         </div>
 

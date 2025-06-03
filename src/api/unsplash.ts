@@ -1,5 +1,5 @@
 import type { UnsplashTag } from "../types/fetch";
-import type { PhotoFilters } from "../types/filters";
+import type { PhotoFilters } from "../types/filter-types";
 
 export const fetchImages = async (
   query: string,
@@ -21,9 +21,9 @@ export const fetchImages = async (
     ...(filters.color && { color: filters.color }),
   });
 
-  const url = `https://api.unsplash.com/search/photos?${params.toString()}`;
-  console.log("Request URL:", url);
-
+  const url = `${
+    import.meta.env.VITE_UNSPLASH_BASE_URL
+  }/search/photos?${params.toString()}`;
   const res = await fetch(url);
 
   if (!res.ok) {
@@ -43,7 +43,9 @@ export const fetchImages = async (
 export const fetchImage = async (id: string, ACCESS_KEY: string) => {
   try {
     const response = await fetch(
-      `https://api.unsplash.com/photos/${id}?client_id=${ACCESS_KEY}`
+      `${
+        import.meta.env.VITE_UNSPLASH_BASE_URL
+      }/photos/${id}?client_id=${ACCESS_KEY}`
     );
     if (!response.ok) {
       throw new Error("Image fetch failed");
@@ -69,7 +71,9 @@ export const fetchRelatedPhotos = async (tags: UnsplashTag[]) => {
 
   if (!tagQuery) return [];
 
-  const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
+  const url = `${
+    import.meta.env.VITE_UNSPLASH_BASE_URL
+  }/search/photos?query=${encodeURIComponent(
     tagQuery
   )}&per_page=6&client_id=${ACCESS_KEY}`;
 

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { PhotoFilters } from "../types/filters";
+import type { PhotoFilters } from "../types/filter-types";
 
 interface FilterStore {
   isFilterModalOpen: boolean;

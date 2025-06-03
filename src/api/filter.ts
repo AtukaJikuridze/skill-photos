@@ -1,23 +1,4 @@
-export type Orientation = "landscape" | "portrait" | "squarish";
-export type OrderBy = "relevant" | "latest";
-export type Color =
-  | "black_and_white"
-  | "black"
-  | "white"
-  | "yellow"
-  | "orange"
-  | "red"
-  | "purple"
-  | "magenta"
-  | "green"
-  | "teal"
-  | "blue";
-
-export interface PhotoFilters {
-  orientation?: Orientation;
-  orderBy?: OrderBy;
-  color?: Color;
-}
+import type { Color, Orientation } from "../types/filter-types";
 
 export const colorOptions: { value: Color; label: string; bg: string }[] = [
   {
@@ -35,4 +16,9 @@ export const colorOptions: { value: Color; label: string; bg: string }[] = [
   { value: "green", label: "მწვანე", bg: "bg-green-500" },
   { value: "teal", label: "ცისფერი", bg: "bg-teal-500" },
   { value: "blue", label: "ლურჯი", bg: "bg-blue-500" },
+];
+export const orientationOptions: Orientation[] = [
+  "landscape",
+  "portrait",
+  "squarish",
 ];

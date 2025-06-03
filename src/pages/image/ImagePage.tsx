@@ -1,16 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import ImageLoader from "../../components/loaders/ImageLoader";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchImage, fetchRelatedPhotos } from "../../api/unsplash";
+import ZoomPicture from "../../components/modal/ZoomPicture";
 
 const ImagePage = () => {
   const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    setIsZoomed(false); // reset zoom on route change
   }, [id]);
 
   const {
@@ -29,37 +32,71 @@ const ImagePage = () => {
     enabled: !!photo,
   });
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
+  const handleHome = () => navigate("/");
 
   if (isError) return <div className="p-4">Error loading photo details</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <button
-        onClick={handleBack}
-        className="inline-block mb-6 text-blue-600 hover:text-blue-800"
-      >
-        ← დაბრუნდი წინა გვერძე
-      </button>
+    <div className="container mx-auto p-4 relative">
+      <ZoomPicture
+        isZoomed={isZoomed}
+        setIsZoomed={setIsZoomed}
+        photo={photo}
+      />
+
+      <div className="flex gap-4">
+        <button
+          onClick={handleBack}
+          className="cursor-pointer flex gap-1 mb-6 text-blue-600 hover:text-blue-800 group"
+        >
+          <span className="transition-transform group-hover:-translate-x-1">
+            ←
+          </span>
+          დაბრუნდი წინა გვერძე
+        </button>
+        <button
+          onClick={handleHome}
+          className="cursor-pointer flex gap-1 mb-6 text-blue-600 hover:text-blue-800 group"
+        >
+          <span className="transition-transform group-hover:-translate-x-1">
+            ←
+          </span>
+          დაბრუნდი მთავარ გვერძე
+        </button>
+      </div>
+
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {isLoading ? (
           <ImageLoader type="main" />
         ) : (
           <>
-            <img
-              src={photo.urls.regular}
-              alt={photo.alt_description || "Photo"}
-              className="w-full h-[500px] object-cover"
-            />
+            <div
+              className="w-full h-[550px] hover:brightness-70 transition-all duration-300 cursor-zoom-in"
+              onClick={() => setIsZoomed(true)}
+            >
+              <img
+                src={photo.urls.regular}
+                alt={photo.alt_description || "Photo"}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
             <div className="p-6">
+              {/* User info */}
               <div className="flex items-center mb-4">
-                <img
-                  src={photo.user.profile_image.medium}
-                  alt={photo.user.name}
-                  className="w-12 h-12 rounded-full mr-4"
-                />
+                <a
+                  href={photo.user.links.html}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  <img
+                    src={photo.user.profile_image.medium}
+                    alt={photo.user.name}
+                    className="w-12 h-12 rounded-full mr-4 cursor-pointer"
+                  />
+                </a>
                 <div>
                   <h2 className="text-xl font-mainBold">{photo.user.name}</h2>
                   <a
@@ -73,6 +110,7 @@ const ImagePage = () => {
                 </div>
               </div>
 
+              {/* Meta info */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                   <h3 className="font-mainBold">ლოკაცია</h3>
@@ -92,6 +130,7 @@ const ImagePage = () => {
                 </div>
               </div>
 
+              {/* Description */}
               {photo.description && (
                 <div className="mb-4">
                   <h3 className="font-mainBold mb-2">აღწერა</h3>
@@ -99,6 +138,7 @@ const ImagePage = () => {
                 </div>
               )}
 
+              {/* Tags */}
               <div>
                 <h3 className="font-mainBold mb-2">Tags</h3>
                 <div className="flex flex-wrap gap-2">
@@ -118,6 +158,7 @@ const ImagePage = () => {
         )}
       </div>
 
+      {/* Related photos */}
       <div className="mt-8">
         <h2 className="text-2xl font-mainBold mb-4">მსგავსი ფოტოები</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
