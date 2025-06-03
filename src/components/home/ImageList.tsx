@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import ImageLoader from "../loaders/ImageLoader";
 import { useFilterStore } from "../../store/filterStore";
 
-const ImageList = ({ query }: { query: string }) => {
+const ImageList: React.FC<{ query: string }> = ({ query }) => {
   const filters = useFilterStore((state) => state.filters);
 
   const {
@@ -50,7 +50,6 @@ const ImageList = ({ query }: { query: string }) => {
     <>
       <div className="columns-1 sm:columns-2 md:columns-4 gap-4 p-4">
         {isLoading ? (
-  
           <>
             {[...Array(12)].map((_, i) => (
               <div key={i} className="mb-4">

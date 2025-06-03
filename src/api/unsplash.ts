@@ -39,7 +39,6 @@ export const fetchImages = async (
   };
 };
 
-// utils/fetchImage.ts
 export const fetchImage = async (id: string, ACCESS_KEY: string) => {
   try {
     const response = await fetch(
@@ -48,7 +47,7 @@ export const fetchImage = async (id: string, ACCESS_KEY: string) => {
       }/photos/${id}?client_id=${ACCESS_KEY}`
     );
     if (!response.ok) {
-      throw new Error("Image fetch failed");
+      return null;
     }
     const data = await response.json();
     return data;

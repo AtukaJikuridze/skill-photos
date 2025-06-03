@@ -4,8 +4,9 @@ import ImageLoader from "../../components/loaders/ImageLoader";
 import { useEffect, useState } from "react";
 import { fetchImage, fetchRelatedPhotos } from "../../api/unsplash";
 import ZoomPicture from "../../components/modal/ZoomPicture";
+import NotFound from "../NotFound";
 
-const ImagePage = () => {
+const ImagePage: React.FC = () => {
   const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -34,9 +35,8 @@ const ImagePage = () => {
 
   const handleBack = () => navigate(-1);
   const handleHome = () => navigate("/");
-
-  if (isError) return <div className="p-4">Error loading photo details</div>;
-
+  console.log(photo, isError);
+  if (!photo && !isLoading) return <NotFound />;
   return (
     <div className="container mx-auto p-4 relative">
       <ZoomPicture
