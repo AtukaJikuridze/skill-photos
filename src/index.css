@@ -1,7 +1,5 @@
 @import "tailwindcss";
 * {
-  padding: 0px;
-  margin: 0px;
   box-sizing: border-box;
 }
 
@@ -10,6 +8,7 @@
   --color-black: #000;
   --color-transparent-white: #ffffffe5;
   --color-paragraph: #00000066;
+  --color-main-blue: #4e71ff;
 
   --font-mainRegular: "mainRegular";
   --font-mainMedium: "mainMedium";
@@ -33,10 +32,13 @@
   font-family: mainBold;
   src: url("/fonts/OnService-Bold.woff2");
 }
-
+.container {
+  margin: 0px auto;
+}
 @media (min-width: 768px) {
   .container {
     width: 750px;
+    
   }
 }
 @media (min-width: 992px) {
