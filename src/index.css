@@ -1,0 +1,77 @@
+@import "tailwindcss";
+* {
+  box-sizing: border-box;
+}
+
+@theme {
+  --color-white: #fff;
+  --color-black: #000;
+  --color-transparent-white: #ffffffe5;
+  --color-paragraph: #00000066;
+  --color-main-blue: #4e71ff;
+
+  --font-mainRegular: "mainRegular";
+  --font-mainMedium: "mainMedium";
+  --font-mainSemiBold: "mainSemiBold";
+  --font-mainBold: "mainBold";
+}
+@layer base {
+  body {
+    box-sizing: border-box;
+    font-family: var(--font-mainRegular);
+  }
+}
+
+@font-face {
+  font-family: mainRegular;
+  src: url("/fonts/OnService-Regular.woff2");
+}
+@font-face {
+  font-family: mainMedium;
+  src: url("/fonts/OnService-Medium.woff2");
+}
+@font-face {
+  font-family: mainSemiBold;
+  src: url("/fonts/OnService-SemiBold.woff2");
+}
+@font-face {
+  font-family: mainBold;
+  src: url("/fonts/OnService-Bold.woff2");
+}
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+@media (min-width: 1400px) {
+  .container {
+    width: 1370px;
+  }
+}
+@media (min-width: 1600px) {
+  .container {
+    width: 1570px;
+  }
+}
+@media (max-width: 600px) {
+  .os_container {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
