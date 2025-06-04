@@ -41,9 +41,11 @@ const ImageLoader: React.FC<ImageLoaderProps> = ({ type = "main" }) => {
   }
 
   return (
-    <div className="animate-pulse space-y-2">
-      <div className="bg-gray-200 h-48 w-full rounded-lg"></div>
-      <div className="h-3 bg-gray-200 rounded w-24"></div>
+    <div className="animate-pulse  mb-4">
+      <div
+        style={{ height: `${Math.floor(300 + Math.random() * 300)}px` }}
+        className={`bg-gray-200 w-full rounded-lg`}
+      ></div>
     </div>
   );
 };

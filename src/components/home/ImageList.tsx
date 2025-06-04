@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import ImageLoader from "../loaders/ImageLoader";
 import { useFilterStore } from "../../store/filterStore";
 import Masonry from "react-masonry-css";
-import Skeleton from "../loaders/Skeleton";
 
 const ImageList: React.FC<{ query: string }> = ({ query }) => {
   const filters = useFilterStore((state) => state.filters);
@@ -35,11 +34,11 @@ const ImageList: React.FC<{ query: string }> = ({ query }) => {
       const { scrollTop, clientHeight, scrollHeight } =
         document.documentElement;
       if (
-        scrollTop + clientHeight >= scrollHeight - 200 &&
+        scrollTop + clientHeight >= scrollHeight - 800 &&
         hasNextPage &&
         !isFetchingNextPage
       ) {
-        // fetchNextPage();
+        fetchNextPage();
       }
     };
 
@@ -83,12 +82,16 @@ const ImageList: React.FC<{ query: string }> = ({ query }) => {
                 </Link>
               ))
             )}
-        {[...Array(12)].map((_, i) => (
-          <div key={i}>
-            <Skeleton />
-          </div>
-        ))}
+
+        {/* 👇 Add loaders *inside* Masonry grid while fetching next page */}
+        {isFetchingNextPage &&
+          [...Array(6)].map((_, i) => (
+            <div key={`loader-${i}`}>
+              <ImageLoader type="suggestion" />
+            </div>
+          ))}
       </Masonry>
+
       {isFetchingNextPage && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
           {[...Array(4)].map((_, i) => (
