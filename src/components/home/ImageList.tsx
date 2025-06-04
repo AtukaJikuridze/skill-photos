@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchImages } from "../../api/unsplash";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import ImageLoader from "../loaders/ImageLoader";
 import { useFilterStore } from "../../store/filterStore";
@@ -8,6 +8,8 @@ import Masonry from "react-masonry-css";
 
 const ImageList: React.FC<{ query: string }> = ({ query }) => {
   const filters = useFilterStore((state) => state.filters);
+  const [isNearLoadingThreshold, setIsNearLoadingThreshold] = useState(false);
+  const observer = useRef<IntersectionObserver | null>(null);
 
   const {
     data,
@@ -30,29 +32,51 @@ const ImageList: React.FC<{ query: string }> = ({ query }) => {
   });
 
   useEffect(() => {
-    const handleScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } =
-        document.documentElement;
-      if (
-        scrollTop + clientHeight >= scrollHeight - 800 &&
-        hasNextPage &&
-        !isFetchingNextPage
-      ) {
-        fetchNextPage();
-      }
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const handleIntersection: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setIsNearLoadingThreshold(true);
+        } else {
+          setIsNearLoadingThreshold(false);
+        }
+      });
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    observer.current = new IntersectionObserver(handleIntersection, {
+      rootMargin: "100px", 
+      threshold: 0.1, 
+    });
+
+    const skeletonElements = document.querySelectorAll(".skeleton-loader");
+    skeletonElements.forEach((el) => {
+      observer.current?.observe(el);
+    });
+
+    return () => {
+      skeletonElements.forEach((el) => {
+        observer.current?.unobserve(el);
+      });
+    };
+  }, [hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    if (isNearLoadingThreshold && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+      setIsNearLoadingThreshold(false);
+    }
+  }, [isNearLoadingThreshold, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   if (isError) return <p>Error loading images</p>;
+
   const breakpointColumnsObj = {
     default: 4,
     1024: 3,
     768: 2,
     500: 1,
   };
+
   return (
     <>
       <Masonry
@@ -62,7 +86,7 @@ const ImageList: React.FC<{ query: string }> = ({ query }) => {
       >
         {isLoading
           ? [...Array(12)].map((_, i) => (
-              <div key={i}>
+              <div key={i} className="skeleton-loader">
                 <ImageLoader type="suggestion" />
               </div>
             ))
@@ -83,10 +107,9 @@ const ImageList: React.FC<{ query: string }> = ({ query }) => {
               ))
             )}
 
-        {/* 👇 Add loaders *inside* Masonry grid while fetching next page */}
-        {isFetchingNextPage &&
+        {!isFetchingNextPage &&
           [...Array(6)].map((_, i) => (
-            <div key={`loader-${i}`}>
+            <div key={`loader-${i}`} className="skeleton-loader">
               <ImageLoader type="suggestion" />
             </div>
           ))}
