@@ -21,7 +21,7 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue, initialValue }) => {
     setFilters,
   } = useFilterStore();
 
-  const { searchHistory, addToHistory } = useSearchStore();
+  const { searchHistory, addToHistory, setSearchHistory } = useSearchStore();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -79,8 +79,10 @@ const Search: React.FC<SearchProps> = ({ setDebouncedValue, initialValue }) => {
                   className="text-gray-500 hover:text-gray-700"
                   onClick={(e) => {
                     e.stopPropagation();
-                    const newHistory = searchHistory.filter((t) => t !== tag);
-                    useSearchStore.setState({ searchHistory: newHistory });
+
+                    setSearchHistory(
+                      searchHistory.filter((t) => t !== tag) || []
+                    );
                   }}
                 />
               </button>
